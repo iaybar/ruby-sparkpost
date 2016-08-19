@@ -18,7 +18,7 @@ module SparkPost
       request(url, @api_key, data, method)
     end
 
-    def send_message(to, from, subject, html_message = nil, **options)
+    def send_message(to, from, subject, html_message = nil, **options , campaign_id = "")
       # TODO: add validations for to, from
       html_message = content_from(options, :html) || html_message
       text_message = content_from(options, :text) || options[:text_message]
@@ -39,6 +39,8 @@ module SparkPost
         ),
         options: {}
       }
+
+      options_from_args["campaign_id"] = campaign_id if !campaign_id.blank?
 
       options.merge!(options_from_args) { |_k, opts, _args| opts }
       add_attachments(options)
@@ -61,7 +63,7 @@ module SparkPost
 
     def prepare_recipient(recipient)
       if recipient.is_a?(Hash)
-        raise ArgumentError,  
+        raise ArgumentError,
               "email missing - '#{recipient.inspect}. It has to be {:address => {:email => 'example@example.com'}} at least!!'" unless recipient[:address][:email]
         return recipient ## This approach allow to send more data in recipients object #Look documentation at Sparkpost API
       else
