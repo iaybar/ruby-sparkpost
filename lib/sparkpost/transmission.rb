@@ -18,7 +18,7 @@ module SparkPost
       request(url, @api_key, data, method)
     end
 
-    def send_message(to, from, subject, html_message = nil, **options , campaign_id = "")
+    def send_message(to, from, subject, html_message = nil, campaign_id = "", **options)
       # TODO: add validations for to, from
       html_message = content_from(options, :html) || html_message
       text_message = content_from(options, :text) || options[:text_message]
